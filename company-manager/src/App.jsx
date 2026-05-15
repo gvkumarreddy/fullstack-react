@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Footer from './layout/Footer';
 import Header from './layout/Header';
 import Sidebar from './layout/Sidebar';
-import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
 import Companies from './pages/Companies';
 import Employees from './pages/Employees';
 import Settings from './pages/Settings';
@@ -24,9 +24,9 @@ const App = () => {
 
         {/* Main Content Area */}
         <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
-          <div className="max-w-6xl mx-auto">
+          <div className="mx-auto">
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Home />} />
               <Route path="/companies" element={<Companies />} />
               <Route path="/employees" element={<Employees />} />
               <Route path="/settings" element={<Settings />} />
