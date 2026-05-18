@@ -16,10 +16,10 @@ const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800">
+    <div className="flex flex-col h-screen overflow-hidden bg-gray-50 text-gray-800">
       <Header isSidebarOpen={isSidebarOpen} toggleSidebar={setIsSidebarOpen} />
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={setIsSidebarOpen} />
 
         {/* Main Content Area */}
@@ -38,7 +38,6 @@ const App = () => {
           </div>
         </main>
       </div>
-
       <Footer title={"WokGrid"} />
     </div>
   );
