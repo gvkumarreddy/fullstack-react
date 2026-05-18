@@ -3,7 +3,7 @@ import React from 'react';
 const products = [
   {
     id: 1,
-    name: "Premium Wireless Headphones",
+    name: "Wireless Headphones",
     price: 299.99,
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300&h=300",
