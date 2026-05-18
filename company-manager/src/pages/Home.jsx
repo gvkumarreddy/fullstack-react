@@ -3,7 +3,7 @@ import React from 'react';
 const products = [
   {
     id: 1,
-    name: "Premium Wireless Headphones",
+    name: "Wireless Headphones",
     price: 299.99,
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300&h=300",
@@ -44,6 +44,14 @@ const products = [
   {
     id: 6,
     name: "Modern Floor Lamp",
+    price: 145.00,
+    category: "Furniture",
+    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&q=80&w=300&h=300",
+    description: "Dimmable LED lighting with a sleek, space-saving design."
+  },
+  {
+    id: 7,
+    name: "Olden Watch",
     price: 145.00,
     category: "Furniture",
     image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&q=80&w=300&h=300",
