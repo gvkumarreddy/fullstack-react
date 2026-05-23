@@ -1,9 +1,10 @@
 import React from 'react';
+import { useCart } from '../context/CartContext';
 
 const products = [
   {
     id: 1,
-    name: "Wireless Headphones",
+    name: "Premium Wireless Headphones",
     price: 299.99,
     category: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300&h=300",
@@ -60,6 +61,8 @@ const products = [
 ];
 
 const Home = () => {
+  const { addToCart } = useCart();
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -103,7 +106,8 @@ const Home = () => {
                   <span className="text-xl font-black text-gray-900 tracking-tight">${product.price.toFixed(2)}</span>
                 </div>
                 <button 
-                  className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl transition-all shadow-lg shadow-blue-100 active:scale-95 focus:ring-4 focus:ring-blue-50"
+                  onClick={() => addToCart(product)}
+                  className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white p-3 rounded-xl transition-all shadow-lg shadow-blue-100 active:scale-95 focus:ring-4 focus:ring-blue-50"
                   aria-label="Add to cart"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
