@@ -2,9 +2,9 @@ import React from 'react';
 import { useAppContext } from '../context/AppContext';
 
 const Home = () => {
-  const { products, cartItems, loading, addToCart, removeFromCart, updateQuantity } = useAppContext();
-
-  if (loading) {
+  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity } = useAppContext();
+  
+  if (productsLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-24 w-24 border-b-2 border-blue-600"></div>
@@ -37,7 +37,7 @@ const Home = () => {
                 />
                 <div className="absolute top-4 left-4">
                   <span className="bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-lg text-[10px] font-black text-blue-600 uppercase tracking-widest shadow-sm border border-blue-50">
-                    {product.category}
+                    {product.category.name}
                   </span>
                 </div>
               </div>
@@ -54,7 +54,7 @@ const Home = () => {
                 <div className="mt-5 flex items-center justify-between pt-4 border-t border-gray-50">
                   <div className="flex flex-col">
                     <span className="text-xs text-gray-400 font-semibold uppercase tracking-tighter">Price</span>
-                    <span className="text-xl font-black text-gray-900 tracking-tight">${product.price.toFixed(2)}</span>
+                    <span className="text-xl font-black text-gray-900 tracking-tight">${product.price}</span>
                   </div>
 
                   <div className="flex items-center gap-2">

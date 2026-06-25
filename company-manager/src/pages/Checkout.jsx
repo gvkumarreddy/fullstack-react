@@ -43,7 +43,7 @@ const Checkout = () => {
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <h3 className="text-lg font-bold text-gray-900 truncate">{product.name}</h3>
-                                            <p className="text-sm text-gray-500 mt-1">{product.category}</p>
+                                            <p className="text-sm text-gray-500 mt-1">{product.category.name}</p>
                                             <div className="flex items-center gap-4 mt-3">
                                                 <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                                                     <button
@@ -57,8 +57,8 @@ const Checkout = () => {
                                                     >+</button>
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{product.quantity} × ${product.price.toFixed(2)}</span>
-                                                    <p className="text-lg font-black text-gray-900 leading-none">${(product.price * product.quantity).toFixed(2)}</p>
+                                                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{product.quantity} × ${product.price}</span>
+                                                    <p className="text-lg font-black text-gray-900 leading-none">${(product.price * product.quantity)}</p>
                                                 </div>
                                             </div>
                                         </div>

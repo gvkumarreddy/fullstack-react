@@ -1,13 +1,16 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { fetchProductsFromAPI } from "../services/productService";
+import {fetchCategoriesFromAPI} from "../services/categoryService";
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [cartItems, setCartItems] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [productsLoading, setProductsLoading] = useState(true);
+    const [categoriesLoading, setCategoriesLoading] = useState(true);
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -17,11 +20,26 @@ export const AppProvider = ({ children }) => {
             } catch (error) {
                 toast.error("Failed to load products");
             } finally { 
-                setLoading(false);
+                setProductsLoading(false);
             }
         };
         loadProducts();
     }, []);
+
+    useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                const data = await fetchCategoriesFromAPI();
+                setCategories(data);
+            } catch (error) {
+                toast.error("Failed to load categories");
+            } finally {
+                setCategoriesLoading(false);
+            }
+        };
+        loadCategories();
+    }, []);
+
 
     const addToCart = (product, quantity = 1) => {
         setCartItems((prevItems) => {
@@ -54,7 +72,7 @@ export const AppProvider = ({ children }) => {
     const cartCount = cartItems.length;
 
     return (
-        <AppContext.Provider value={{ products, cartItems, loading, addToCart, cartCount, removeFromCart, updateQuantity }}>
+        <AppContext.Provider value={{ products, cartItems, productsLoading, categories, categoriesLoading, addToCart, cartCount, removeFromCart, updateQuantity }}>
             {children}
         </AppContext.Provider>
     );
