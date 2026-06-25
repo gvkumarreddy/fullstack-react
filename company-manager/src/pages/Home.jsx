@@ -18,7 +18,7 @@ const Home = () => {
     ? products.filter(p => p.category.id === categoryId)
     : products;
 
-  const currentCategory = categoryId ? categories.find(c => c.id === categoryId || c._id === categoryId) : null;
+  const currentCategory = categoryId ? categories.find(c => c.id === categoryId) : null;
   const pageTitle = currentCategory ? currentCategory.name : 'Featured Products';
 
   return (
