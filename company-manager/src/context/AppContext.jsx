@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
-import { fetchProductsFromAPI } from "../services/productService";
+import { fetchProductsFromAPI, fetchProductsByCategoryFromAPI } from "../services/productService";
 import {fetchCategoriesFromAPI} from "../services/categoryService";
 
 const AppContext = createContext();
@@ -9,10 +9,12 @@ export const AppProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('all');
     const [productsLoading, setProductsLoading] = useState(true);
     const [categoriesLoading, setCategoriesLoading] = useState(true);
 
     useEffect(() => {
+        console.log("Selected Category changed:", selectedCategory);
         const loadProducts = async () => {
             try {
                 const data = await fetchProductsFromAPI();
@@ -23,8 +25,22 @@ export const AppProvider = ({ children }) => {
                 setProductsLoading(false);
             }
         };
-        loadProducts();
-    }, []);
+        const loadProductsByCategory = async () => {    
+            try {
+                const data = await fetchProductsByCategoryFromAPI(selectedCategory);
+                setProducts(data);
+            } catch (error) {
+                toast.error("Failed to load products by category");
+            } finally { 
+                setProductsLoading(false);
+            }
+        };
+        if (selectedCategory === 'all') {
+            loadProducts();
+        } else {
+            loadProductsByCategory();
+        }
+    }, [selectedCategory]);
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -72,7 +88,7 @@ export const AppProvider = ({ children }) => {
     const cartCount = cartItems.length;
 
     return (
-        <AppContext.Provider value={{ products, cartItems, productsLoading, categories, categoriesLoading, addToCart, cartCount, removeFromCart, updateQuantity }}>
+        <AppContext.Provider value={{ products, cartItems, productsLoading, categories, categoriesLoading, addToCart, cartCount, removeFromCart, updateQuantity, setSelectedCategory }}>
             {children}
         </AppContext.Provider>
     );

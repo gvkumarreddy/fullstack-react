@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useParams } from 'react-router-dom';
 
 const Home = () => {
-  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity, categories } = useAppContext();
-  const { id: categoryId } = useParams();
+  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity, categories, setSelectedCategory , categoryId} = useAppContext();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (categoryId) {
+      setSelectedCategory(categoryId);
+    } else {
+      setSelectedCategory('all');
+    }
+  }, [categoryId, setSelectedCategory]);
 
   if (productsLoading) {
     return (
@@ -14,9 +22,9 @@ const Home = () => {
     );
   }
 
-  const filteredProducts = categoryId
-    ? products.filter(p => p.category.id === categoryId)
-    : products;
+  // const filteredProducts = categoryId
+  //   ? products.filter(p => p.category.id === categoryId)
+  //   : products;
 
   const currentCategory = categoryId ? categories.find(c => c.id === categoryId) : null;
   const pageTitle = currentCategory ? currentCategory.name : 'Featured Products';
@@ -27,13 +35,13 @@ const Home = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{pageTitle}</h1>
         <span className="text-sm font-medium text-gray-500 bg-white border px-3 py-1 rounded-full shadow-sm">
-          {filteredProducts.length} Items Available
+          {products.length} Items Available
         </span>
       </div>
 
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-12">
-        {filteredProducts.map((product) => {
+        {products.map((product) => {
           const itemInCart = cartItems.find((item) => item.id === product.id);
           return (
             <div key={product.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col overflow-hidden">
