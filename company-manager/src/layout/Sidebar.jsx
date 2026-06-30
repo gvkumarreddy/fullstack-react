@@ -1,12 +1,30 @@
-import React, { useState, useEffect } from 'react'; // 1. Added useState and useEffect
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // 2. Define state to hold your categories array
   const {categories, categoriesLoading} = useAppContext();
+
+  const handlePriceRangeChange = (e) => {
+    const { value, checked } = e.target;
+    const allRanges = searchParams.getAll('pricerange');
+
+    let newRanges;
+    if (checked) {
+      newRanges = [...allRanges, value];
+    } else {
+      newRanges = allRanges.filter((range) => range !== value);
+    }
+
+    // Create a new URLSearchParams object to set the new price ranges
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete('pricerange');
+    newRanges.forEach(range => newSearchParams.append('pricerange', range));
+    setSearchParams(newSearchParams);
+  };
 
   // Helper to determine if a link is currently active
   const isActive = (path) => {
@@ -72,7 +90,12 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             <div className="px-2 space-y-2">
               {[{ label: 'Under $50', id: 'p1' }, { label: '$50 to $100', id: 'p2' }, { label: '$100 to $500', id: 'p3' }, { label: 'Over $500', id: 'p4' }].map((range) => (
                 <label key={range.id} className="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <input
+                    type="checkbox"
+                    value={range.id}
+                    checked={searchParams.getAll('pricerange').includes(range.id)}
+                    onChange={handlePriceRangeChange}
+                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                   <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">{range.label}</span>
                 </label>
               ))}

@@ -1,5 +1,6 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
 import { fetchProductsFromAPI, fetchProductsByCategoryFromAPI } from "../services/productService";
 import {fetchCategoriesFromAPI} from "../services/categoryService";
 
@@ -12,12 +13,15 @@ export const AppProvider = ({ children }) => {
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [productsLoading, setProductsLoading] = useState(true);
     const [categoriesLoading, setCategoriesLoading] = useState(true);
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         console.log("Selected Category changed:", selectedCategory);
+        const priceRanges = searchParams.getAll('pricerange');
+
         const loadProducts = async () => {
             try {
-                const data = await fetchProductsFromAPI();
+                const data = await fetchProductsFromAPI({ priceRanges: priceRanges });
                 setProducts(data);
             } catch (error) {
                 toast.error("Failed to load products");
@@ -25,9 +29,10 @@ export const AppProvider = ({ children }) => {
                 setProductsLoading(false);
             }
         };
+
         const loadProductsByCategory = async () => {    
             try {
-                const data = await fetchProductsByCategoryFromAPI(selectedCategory);
+                const data = await fetchProductsByCategoryFromAPI(selectedCategory, { priceRanges: priceRanges });
                 setProducts(data);
             } catch (error) {
                 toast.error("Failed to load products by category");
@@ -35,12 +40,13 @@ export const AppProvider = ({ children }) => {
                 setProductsLoading(false);
             }
         };
+
         if (selectedCategory === 'all') {
             loadProducts();
         } else {
             loadProductsByCategory();
         }
-    }, [selectedCategory]);
+    }, [selectedCategory, searchParams]);
 
     useEffect(() => {
         const loadCategories = async () => {

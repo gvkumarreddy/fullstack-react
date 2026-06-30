@@ -3,16 +3,16 @@ import { useAppContext } from '../context/AppContext';
 import { useParams } from 'react-router-dom';
 
 const Home = () => {
-  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity, categories, setSelectedCategory , categoryId} = useAppContext();
+  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity, categories, setSelectedCategory } = useAppContext();
   const { id } = useParams();
 
   useEffect(() => {
-    if (categoryId) {
-      setSelectedCategory(categoryId);
+    if (id) {
+      setSelectedCategory(id);
     } else {
       setSelectedCategory('all');
     }
-  }, [categoryId, setSelectedCategory]);
+  }, [id, setSelectedCategory]);
 
   if (productsLoading) {
     return (
@@ -22,11 +22,8 @@ const Home = () => {
     );
   }
 
-  // const filteredProducts = categoryId
-  //   ? products.filter(p => p.category.id === categoryId)
-  //   : products;
-
-  const currentCategory = categoryId ? categories.find(c => c.id === categoryId) : null;
+  const categoryId = id;
+  const currentCategory = categoryId ? categories.find(c => (c.id || c._id) === categoryId) : null;
   const pageTitle = currentCategory ? currentCategory.name : 'Featured Products';
 
   return (
