@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
-import { fetchProductsFromAPI } from "../services/productService";
+import { fetchProductsFromAPI, fetchProductsByCategoryFromAPI } from "../services/productService";
 import {fetchCategoriesFromAPI} from "../services/categoryService";
 
 const AppContext = createContext();
@@ -9,22 +9,30 @@ export const AppProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [priceRanges, setPriceRanges] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('all');
     const [productsLoading, setProductsLoading] = useState(true);
     const [categoriesLoading, setCategoriesLoading] = useState(true);
 
     useEffect(() => {
         const loadProducts = async () => {
             try {
-                const data = await fetchProductsFromAPI();
+                setProductsLoading(true);
+                const data = selectedCategory === 'all'
+                    ? await fetchProductsFromAPI(priceRanges)
+                    : await fetchProductsByCategoryFromAPI(selectedCategory, priceRanges);
                 setProducts(data);
             } catch (error) {
-                toast.error("Failed to load products");
+                const errorMessage = error.message.includes('by category') 
+                    ? "Failed to load products by category" 
+                    : "Failed to load products";
+                toast.error(errorMessage);
             } finally { 
                 setProductsLoading(false);
             }
         };
         loadProducts();
-    }, []);
+    }, [selectedCategory, priceRanges]);
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -72,7 +80,7 @@ export const AppProvider = ({ children }) => {
     const cartCount = cartItems.length;
 
     return (
-        <AppContext.Provider value={{ products, cartItems, productsLoading, categories, categoriesLoading, addToCart, cartCount, removeFromCart, updateQuantity }}>
+        <AppContext.Provider value={{ products, cartItems, productsLoading, categories, categoriesLoading, priceRanges, setPriceRanges, addToCart, cartCount, removeFromCart, updateQuantity, setSelectedCategory }}>
             {children}
         </AppContext.Provider>
     );

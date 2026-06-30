@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
+import { useParams } from 'react-router-dom';
 
-const Home = () => {
-  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity } = useAppContext();
-  
+const Home = () => { // This component now also serves as the Category page
+  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity, categories, setSelectedCategory} = useAppContext();
+  const { id: categoryId } = useParams(); // Get categoryId from URL params
+
+  useEffect(() => {
+    if (categoryId) {
+      setSelectedCategory(categoryId);
+    } else {
+      setSelectedCategory('all');
+    }
+  }, [categoryId, setSelectedCategory]);
+
   if (productsLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -11,6 +21,9 @@ const Home = () => {
       </div>
     );
   }
+
+  const currentCategory = categoryId ? categories.find(c => c.id === categoryId) : null;
+  const pageTitle = currentCategory ? currentCategory.name : 'Featured Products';
 
   return (
     <div className="space-y-6">

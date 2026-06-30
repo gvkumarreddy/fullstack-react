@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react'; // 1. Added useState and use
 import { Link, useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
-const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
+const Sidebar = ({ isSidebarOpen, toggleSidebar, handlePriceRangeChange }) => {
   const location = useLocation();
 
-  // 2. Define state to hold your categories array
-  const {categories, categoriesLoading} = useAppContext();
+  const { categories, categoriesLoading, priceRanges } = useAppContext();
 
   // Helper to determine if a link is currently active
   const isActive = (path) => {
@@ -72,7 +71,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             <div className="px-2 space-y-2">
               {[{ label: 'Under $50', id: 'p1' }, { label: '$50 to $100', id: 'p2' }, { label: '$100 to $500', id: 'p3' }, { label: 'Over $500', id: 'p4' }].map((range) => (
                 <label key={range.id} className="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                  <input 
+                    type="checkbox" 
+                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
+                    checked={priceRanges.includes(range.id)}
+                    onChange={() => handlePriceRangeChange(range.id)} />
                   <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">{range.label}</span>
                 </label>
               ))}
