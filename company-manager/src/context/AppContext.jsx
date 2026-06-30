@@ -1,8 +1,8 @@
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useSearchParams } from "react-router-dom";
 import { fetchProductsFromAPI, fetchProductsByCategoryFromAPI } from "../services/productService";
 import {fetchCategoriesFromAPI} from "../services/categoryService";
+import { useSearchParams } from "react-router-dom";
 
 const AppContext = createContext();
 
@@ -10,6 +10,7 @@ export const AppProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [priceRanges, setPriceRanges] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [productsLoading, setProductsLoading] = useState(true);
     const [categoriesLoading, setCategoriesLoading] = useState(true);
@@ -21,32 +22,22 @@ export const AppProvider = ({ children }) => {
 
         const loadProducts = async () => {
             try {
-                const data = await fetchProductsFromAPI({ priceRanges: priceRanges });
+                setProductsLoading(true);
+                const data = selectedCategory === 'all'
+                    ? await fetchProductsFromAPI(priceRanges)
+                    : await fetchProductsByCategoryFromAPI(selectedCategory, priceRanges);
                 setProducts(data);
             } catch (error) {
-                toast.error("Failed to load products");
+                const errorMessage = error.message.includes('by category') 
+                    ? "Failed to load products by category" 
+                    : "Failed to load products";
+                toast.error(errorMessage);
             } finally { 
                 setProductsLoading(false);
             }
         };
-
-        const loadProductsByCategory = async () => {    
-            try {
-                const data = await fetchProductsByCategoryFromAPI(selectedCategory, { priceRanges: priceRanges });
-                setProducts(data);
-            } catch (error) {
-                toast.error("Failed to load products by category");
-            } finally { 
-                setProductsLoading(false);
-            }
-        };
-
-        if (selectedCategory === 'all') {
-            loadProducts();
-        } else {
-            loadProductsByCategory();
-        }
-    }, [selectedCategory, searchParams]);
+        loadProducts();
+    }, [selectedCategory, priceRanges]);
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -94,7 +85,7 @@ export const AppProvider = ({ children }) => {
     const cartCount = cartItems.length;
 
     return (
-        <AppContext.Provider value={{ products, cartItems, productsLoading, categories, categoriesLoading, addToCart, cartCount, removeFromCart, updateQuantity, setSelectedCategory }}>
+        <AppContext.Provider value={{ products, cartItems, productsLoading, categories, categoriesLoading, priceRanges, setPriceRanges, addToCart, cartCount, removeFromCart, updateQuantity, setSelectedCategory }}>
             {children}
         </AppContext.Provider>
     );

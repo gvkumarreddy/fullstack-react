@@ -2,17 +2,17 @@ import React, { useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { useParams } from 'react-router-dom';
 
-const Home = () => {
-  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity, categories, setSelectedCategory } = useAppContext();
-  const { id } = useParams();
+const Home = () => { // This component now also serves as the Category page
+  const { products, cartItems, productsLoading, addToCart, removeFromCart, updateQuantity, categories, setSelectedCategory} = useAppContext();
+  const { id: categoryId } = useParams(); // Get categoryId from URL params
 
   useEffect(() => {
-    if (id) {
-      setSelectedCategory(id);
+    if (categoryId) {
+      setSelectedCategory(categoryId);
     } else {
       setSelectedCategory('all');
     }
-  }, [id, setSelectedCategory]);
+  }, [categoryId, setSelectedCategory]);
 
   if (productsLoading) {
     return (
@@ -22,8 +22,7 @@ const Home = () => {
     );
   }
 
-  const categoryId = id;
-  const currentCategory = categoryId ? categories.find(c => (c.id || c._id) === categoryId) : null;
+  const currentCategory = categoryId ? categories.find(c => c.id === categoryId) : null;
   const pageTitle = currentCategory ? currentCategory.name : 'Featured Products';
 
   return (

@@ -1,6 +1,10 @@
 //  Fetches products from the REST API.
-export const fetchProductsFromAPI = async () => {
-    const response = await fetch('http://localhost:3000/products');
+export const fetchProductsFromAPI = async (priceRanges = []) => {
+    const url = new URL('http://localhost:3000/products');
+    priceRanges.forEach(range => {
+        url.searchParams.append('pricerange', range);
+    });
+    const response = await fetch(url);
     
     if (!response.ok) {
         throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
@@ -11,10 +15,12 @@ export const fetchProductsFromAPI = async () => {
     
 };
 
-export const fetchProductsByCategoryFromAPI = async (categoryId) => {
-    // http://[::1]:3000/products/category/8e3db450-ba93-469f-b0b2-4e21be73cd40
-    const url = `http://localhost:3000/products/category/${categoryId}`;
-    console.log(url);
+export const fetchProductsByCategoryFromAPI = async (categoryId, priceRanges = []) => {
+    const url = new URL(`http://localhost:3000/products/category/${categoryId}`);
+    priceRanges.forEach(range => {
+        url.searchParams.append('pricerange', range);
+    });
+
     const response = await fetch(url);
     
     if (!response.ok) {
